@@ -27,7 +27,7 @@ int main(void)
 
 
 	GPIO_Handle_t GpioLedGreen;
-	memset(&GpioLedGreen, 0, sizeof(GpioLedGreen));
+ 	memset(&GpioLedGreen, 0, sizeof(GpioLedGreen));
 
 	GpioLedGreen.pGPIOx = GPIOC;
 	GpioLedGreen.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_9;

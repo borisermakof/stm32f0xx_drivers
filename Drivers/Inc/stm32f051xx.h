@@ -153,8 +153,19 @@ typedef struct {
 } EXTI_RegDef_t;
 
 /*
- * Peripheral structure definition for EXTI. Extended interrupts and events controller
+ * Peripheral structure definition for SPIx.
  */
+typedef struct {
+	__vo uint32_t CR1; 			/*<! Control register 1 					Offset 0x00>*/
+	__vo uint32_t CR2;			// Control register 2 						Offset 0x04
+	__vo uint32_t SR;			// Status register							Offset 0x08
+	__vo uint32_t DR;			// Data register							Offset 0x0C
+	__vo uint32_t CRCPR;		// CRC polynomial register					Offset 0x10
+	__vo uint32_t RXCRCR;		// Rx CRC register							Offset 0x14
+	__vo uint32_t TXCRCR;		// Tx CRC register							Offset 0x18
+	__vo uint32_t I2SCFGR;		// I2S configuration register				Offset 0x1C
+	__vo uint32_t I2SPR;		// I2S prescaler register					Offset 0x20
+} SPI_RegDef_t;
 
 /*
  * Peripheral structure definitions for SYSCFG. System configuration controller
@@ -179,6 +190,9 @@ typedef struct {
 
 #define SYSCFG							((SYSCFG_RegDef_t*) SYSCFG_BASE_ADDR)
 
+#define SPI1							((SPI_RegDef_t*) SPI1_BASE_ADDR)
+#define SPI2							((SPI_RegDef_t*) SPI2_BASE_ADDR)
+
 /*
  * Clock Enable Macros for GPIOx peripherals
  */
@@ -198,7 +212,7 @@ typedef struct {
 /*
  * Clock Enable Macros for SPIx peripherals
  */
-#define SPI1_PCLK_EN()					(RCC->APB2ENR |= (1 << 12)
+#define SPI1_PCLK_EN()					(RCC->APB2ENR |= (1 << 12))
 #define SPI2_PCLK_EN()					(RCC->APB1ENR |= (1 << 14))
 
 /*
@@ -241,7 +255,7 @@ typedef struct {
  * Clock Disable Macros for SPIx peripherals
  */
 
-#define SPI1_PCLK_DI()					(RCC->APB2ENR &= ~(1 << 12)
+#define SPI1_PCLK_DI()					(RCC->APB2ENR &= ~(1 << 12))
 #define SPI2_PCLK_DI()					(RCC->APB1ENR &= ~(1 << 14))
 
 /*
@@ -280,6 +294,11 @@ typedef struct {
 										  (x == GPIOE) ? 4 :\
 										  (x == GPIOF) ? 5 : 0 )
 
+/*
+ * Macros to reset SPIx peripherals
+ */
+#define SPI1_REG_RESET()				do { (RCC->APB2RSTR |= (1 << 12)); (RCC->APB2RSTR &= ~(1 << 12)); } while (0)
+#define SPI2_REG_RESET()				do { (RCC->APB1RSTR |= (1 << 14)); (RCC->APB1RSTR &= ~(1 << 14)); } while (0)
 
 /*
  * Some generic macros
@@ -292,5 +311,53 @@ typedef struct {
 #define GPIO_PIN_SET					SET
 #define GPIO_PIN_RESET					RESET
 
+/*
+ * SPI CR1 bits positions
+ */
+#define SPI_CR1_CPHA					0
+#define SPI_CR1_CPOL					1
+#define SPI_CR1_MSTR					2
+#define SPI_CR1_BR						3
+#define SPI_CR1_SPE						6
+#define SPI_CR1_LSB_F					7
+#define SPI_CR1_SSI						8
+#define SPI_CR1_SSM						9
+#define SPI_CR1_RX_ONLY					10
+#define SPI_CR1_CRCL					11
+#define SPI_CR1_CRC_NEXT				12
+#define SPI_CR1_CRCEN					13
+#define SPI_CR1_BIDIOE					14
+#define SPI_CR1_BIDIMODE				15
+
+/*
+ * SPI CR2 bits positions
+ */
+#define SPI_CR2_RXDMAEN					0
+#define SPI_CR2_TXDMAEN					1
+#define SPI_CR2_SSOE					2
+#define SPI_CR2_NSSP					3
+#define SPI_CR2_FRF						4
+#define SPI_CR2_ERRIE					5
+#define SPI_CR2_RXNEIE					6
+#define SPI_CR2_TXEIE					7
+#define SPI_CR2_DS						8
+#define SPI_CR2_FRXT_H					12
+#define SPI_CR2_LDMA_RX					13
+#define SPI_CR2_LDMA_TX					14
+
+/*
+ * SPI SR status register bits positions
+ */
+#define SPI_SR_RXNE						0
+#define SPI_SR_TXE						1
+#define SPI_SR_CHSIDE					2
+#define SPI_SR_UDR						3
+#define SPI_SR_CRC_ERR					4
+#define SPI_SR_MODF						5
+#define SPI_SR_OVR						6
+#define SPI_SR_BSY						7
+#define SPI_SR_FRE						8
+#define SPI_SR_FRLVL					9
+#define SPI_SR_FTLVL					11
 
 #endif /* INC_STM32F051XX_H_ */
